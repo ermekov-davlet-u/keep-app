@@ -1,11 +1,16 @@
-import { CardContent, Card, Typography, CardActions, Button, IconButton } from '@mui/material';
+import { CardContent, Card, Typography, CardActions, IconButton } from '@mui/material';
 import React, { useContext } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Box } from '@mui/material';
 import { NoteContext } from './../../store';
 
-function NoteCard( { title, content, date, editHundle, idNote }: { title: string, content: string, date: string, editHundle: () => void, idNote: string } ) {
+type NoteCardPropType = { title: string, content: string, date: string, editHundle: () => void, idNote: string }
+
+
+//Карточка для заметки
+
+function NoteCard( { title, content, date, editHundle, idNote }: NoteCardPropType ) {
 
     const { deleteNote } = useContext(NoteContext)
 

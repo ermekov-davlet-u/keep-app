@@ -1,26 +1,17 @@
 import * as React from 'react';
-import { Container, Grid, Menu, MenuItem, Paper, TextField  } from "@mui/material";
-import AppBar from '@mui/material/AppBar';
+import { Container, Grid, Paper, TextField  } from "@mui/material";
 import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
 import SideBar from './../components/SideBar/index';
 import NoteCard from './../components/Note/card';
 import CreateNote from './../components/Note/CreateNote';
 import { Modal } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { NoteContext } from './../store';
 import { INotes } from '../App';
 import { useMemo } from 'react';
+import Header from './../components/Header/index';
 
 function Main() {
     const {notes, trash} = React.useContext(NoteContext)    
@@ -43,32 +34,23 @@ function Main() {
     const noteses = useMemo(() => {
         return notes
     }, [open.show, createNew, trash])
-    
-
 
     return ( 
         <Container style={{ background: "#aaa", minHeight: "99vh", width: "100vw", maxWidth: "1440px", marginBottom: 24 }} >
-                <Modal
-                    open={open.show}
-                    onClose={hundleClouse}
-                    aria-labelledby="modal-modal-title" 
-                    aria-describedby="modal-modal-description">
-                    <Box style={{ background: "#fff", width: 480, margin: "68px auto", padding: "28px", borderRadius: 12}}>
-                        <CreateNote note={open.note} close={hundleClouse} />
-                    </Box>
-                </Modal>
-            
+            {/* Модальное окно для редактирования */}
+            <Modal
+                open={open.show}
+                onClose={hundleClouse}
+                aria-labelledby="modal-modal-title" 
+                aria-describedby="modal-modal-description">
+                <Box style={{ background: "#fff", width: 480, margin: "68px auto", padding: "28px", borderRadius: 12}}>
+                    <CreateNote note={open.note} close={hundleClouse} />
+                </Box>
+            </Modal>
+
             <Grid container style={{margin: '0 auto'}}>
                 <Grid spacing={2} item xs={12}>
-                    <Paper style={{height: 68, margin: 10, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                        <TextField size="small" value={search} onChange={(e) => {
-                            setSearch(e.target.value)
-                        }} type="search"
-                        id="outlined-basic" label="Поиск" variant="outlined" style={{ margin: 5, width: 420 }} />
-                        <Typography variant="h6" style={{ margin: 12 }} >
-                            Заметки
-                        </Typography>
-                    </Paper>
+                    <Header search={search} setSearch={setSearch} />
                 </Grid>
                 <Grid item xs={3}>
                     <Paper style={{ margin: 10 }}>
@@ -79,17 +61,18 @@ function Main() {
                     <Grid container>
                         <Grid spacing={1} item xs={12} >
                             <Paper style={{ textAlign: "center", height: "auto", width: "520px", overflow: "hidden", margin: "0 auto"}} >
-                                    {
-                                        !createNew && <IconButton style={{ fontSize: "12", paddingRight: 12}} onClick={() => { setCreate(true) }} >
+                                {
+                                    // Блок где создаеться новая заметка
+                                    createNew? <CreateNote close={() => { setCreate(false) }} note={null} /> 
+                                    :
+                                    <IconButton style={{ fontSize: "12", paddingRight: 12}} onClick={() => { setCreate(true) }} >
                                         <AddBoxIcon color="action" />
                                     </IconButton>
-                                    }
-                                    {
-                                        createNew && <CreateNote close={() => { setCreate(false) }} note={null} /> 
-                                    }
+                                }
                             </Paper>
                         </Grid>
-                        {
+                        { 
+                            // Вывод карточек, сначала фильтрует, потом выводит результат 
                             noteses.filter((item: INotes) => {
                                 return item.title.includes(search) || item.content.includes(search)
                                     }).map((note: INotes , i: number) => { 

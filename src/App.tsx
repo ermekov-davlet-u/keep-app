@@ -17,8 +17,10 @@ export interface INotes {
 
 function App() {
 
+  // Удаленные заметки попадают в массив trash
   const [ trash, setTrash ] = useState<INotes[]>([])
-    const [ notes, setNotes ] = useState<INotes[]>([
+  // Главный массив замеметок
+  const [ notes, setNotes ] = useState<INotes[]>([
     {
       id: 1,
       title: "Заметка 1",
@@ -45,6 +47,7 @@ function App() {
     }
   ])
 
+  // Функция создает новую заметку 
   function createNew(){
     const newNote: INotes = {
       id: Date.now(),
@@ -55,6 +58,7 @@ function App() {
     setNotes( [ ...notes, newNote ] )
     return newNote
   }
+  // Функция удаляет заметку
   function deleteNote ( idNote: string ) {
     setTrash(( state: any ) => {
       const note = notes.find( note => note.id === idNote)

@@ -1,7 +1,7 @@
 import { Box, Container, Divider, Grid, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Typography  } from "@mui/material";
 import React, { useId } from "react";
 
-
+// Сайдбар 
 function SideBar() {
     return ( 
         <Box onClick={() => {}} sx={{ textAlign: 'center' }}>

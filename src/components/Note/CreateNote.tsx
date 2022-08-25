@@ -1,5 +1,5 @@
-import { Button, Container, IconButton } from '@mui/material';
-import { AppBar, TextField, Typography } from '@mui/material';
+import { Container, IconButton } from '@mui/material';
+import { TextField, Typography } from '@mui/material';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useState } from 'react';
@@ -17,11 +17,10 @@ import { useCallback } from 'react';
 interface CreateNotePropType {
     note?: INotes | null;
     close: () => void,
-    prop?: string
 }
 
 
-function CreateNote( { note, close, prop }: CreateNotePropType ) {
+function CreateNote( { note, close }: CreateNotePropType ) {
 
     const { setNotes, createNew, deleteNote } = useContext(NoteContext)
 
@@ -33,6 +32,8 @@ function CreateNote( { note, close, prop }: CreateNotePropType ) {
     })
     
     useEffect(() => {
+        // Данный эффект создает и созраняет новую заметку, текст и заголовок заметки пустые то они не сохранятся 
+        // В случае редактирования, поставит данные(текст и заголовок) по умолчанию 
         if( !note ){
             setCurrentNode(createNew())
             return
@@ -41,6 +42,7 @@ function CreateNote( { note, close, prop }: CreateNotePropType ) {
     }, [])
 
     useEffect(() => {
+        // Данный эффект реагирует на каждые изменения в заметке на сохраняет автоматически
         setNotes((state: INotes[]) => {
             return state.map(item => {
                 if( item.id === currentNode.id){
@@ -58,16 +60,15 @@ function CreateNote( { note, close, prop }: CreateNotePropType ) {
                     <Typography variant="h6" style={{ padding: "8px 0", background: "white", width: "360px" }} onClick={() => {
                         console.log(currentNode)
                     }}> 
-                        Завметка
+                        Заметка
                     </Typography>
-                        {
-                            (!currentNode.title && !currentNode.content)? 
-                            <IconButton  style={{ fontSize: "12", paddingRight: 12}} onClick={() => {
-                                close()
-                                deleteNote(currentNode.id)}} ><CloseIcon /> </IconButton> : 
-                            <IconButton  style={{ fontSize: "12", paddingRight: 12}} onClick={close} ><PushPinIcon /></IconButton>
-                        }
-                    
+                    {
+                        (!currentNode.title && !currentNode.content)? 
+                        <IconButton  style={{ fontSize: "12", paddingRight: 12}} onClick={() => {
+                            close()
+                            deleteNote(currentNode.id)}} ><CloseIcon /> </IconButton> : 
+                        <IconButton  style={{ fontSize: "12", paddingRight: 12}} onClick={close} ><PushPinIcon /></IconButton>
+                    }
                 </Paper>
                 <form>
                     <TextField
